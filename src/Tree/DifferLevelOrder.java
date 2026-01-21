@@ -4,7 +4,7 @@ import java.util.*;
 
 class DifferLevelOrderSolution {
 
-  int diametermaxcoun = 0;
+  int diametermaxcoun = Integer.MIN_VALUE;
 
   public List<List<Integer>> levelOrder(TreeNode root) {
     // declar the linklist for the LIst<List>
@@ -86,6 +86,56 @@ class DifferLevelOrderSolution {
       queue = temp;
     }
 
+    return ans;
+  }
+
+  class Storage {
+    TreeNode root;
+    int row;
+    int col;
+
+    public Storage(TreeNode root, int row, int col) {
+      this.root = root;
+      this.row = row;
+      this.col = col;
+    }
+  }
+
+  public List<List<Integer>> verticalTraversal(TreeNode root) {
+
+    List<List<Integer>> ans = new LinkedList<>();
+    if (root == null) return ans;
+
+    Queue<Storage> queue = new LinkedList<>();
+    Map<Integer, Map<Integer, PriorityQueue<Integer>>> holder = new TreeMap<>();
+
+    queue.offer(new Storage(root, 0, 0));
+
+    while (!queue.isEmpty()) {
+      int size = queue.size();
+      Storage storage = queue.poll();
+      holder
+          .computeIfAbsent(storage.col, k -> new TreeMap<>())
+          .computeIfAbsent(storage.row, k -> new PriorityQueue<>())
+          .add(storage.root.val);
+
+      if (storage.root.left != null) {
+        queue.offer(new Storage(storage.root.left, (storage.row + 1), (storage.col - 1)));
+      }
+
+      if (storage.root.right != null) {
+        queue.offer(new Storage(storage.root.right, (storage.row + 1), (storage.col + 1)));
+      }
+    }
+    for (Map<Integer, PriorityQueue<Integer>> rows : holder.values()) {
+      List<Integer> column = new ArrayList<>();
+      for (PriorityQueue<Integer> pq : rows.values()) {
+        while (!pq.isEmpty()) {
+          column.add(pq.poll());
+        }
+      }
+      ans.add(column);
+    }
     return ans;
   }
 
@@ -228,6 +278,24 @@ class DifferLevelOrderSolution {
 
     diametermaxcoun = Math.max(diametermaxcoun, (left + right + 1));
     return Math.max(left, right) + 1;
+  }
+
+  public int maxPathSum(TreeNode root) {
+    diameterOfBinaryTreeFinderII(root);
+    return diametermaxcoun;
+  }
+
+  public int diameterOfBinaryTreeFinderII(TreeNode root) {
+    if (root == null) return 0;
+
+    int left = diameterOfBinaryTreeFinderII(root.left);
+    int right = diameterOfBinaryTreeFinderII(root.right);
+
+    left = Math.max(0, left);
+    right = Math.max(0, right);
+    int pathSum = left + right + root.val;
+    diametermaxcoun = Math.max(diametermaxcoun, pathSum);
+    return Math.max(left, right) + root.val;
   }
 }
 

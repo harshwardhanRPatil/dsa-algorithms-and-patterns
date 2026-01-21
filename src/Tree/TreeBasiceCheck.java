@@ -10,7 +10,12 @@ package Tree;
  * All methods use recursion and are optimized for O(n) time complexity.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 class TreeBasiceCheckSolution {
+  List<Integer> ans = new ArrayList<>();
+    int goodNodeCounter=0;
   public boolean isBalanced(TreeNode root) {
     return heightfinder(root) != -1;
   }
@@ -89,6 +94,57 @@ class TreeBasiceCheckSolution {
     root.right = helper(nums, mid + 1, right);
     return root;
   }
+
+  public void flatten(TreeNode root) {
+    root = treecreation(null, 0);
+  }
+
+  public TreeNode treecreation(TreeNode root, int pointer) {
+    if (pointer == ans.size()) return null;
+    if (root == null) root = new TreeNode(ans.get(pointer));
+    root.right = treecreation(root.left, pointer + 1);
+    return root;
+  }
+
+  public void preorder(TreeNode root) {
+    if (root != null) {
+      ans.add(root.val);
+      preorder(root.left);
+      preorder(root.right);
+    }
+  }
+
+  // using DFS after the video get the idea
+  public void flattenII(TreeNode root) {
+    if (root == null) return;
+
+    TreeNode current = root;
+    while (current != null) {
+      if (current.left != null) {
+        TreeNode temp = current.left;
+        while (temp.right != null) {
+          temp = temp.right;
+        }
+
+        temp.right = current.right;
+        current.right = current.left;
+        current.left = null;
+      }
+      current = current.right;
+    }
+  }
+    public int goodNodes(TreeNode root) {
+        goodNodesFinder(root,root.val);
+      return goodNodeCounter;
+    }
+    public void goodNodesFinder(TreeNode root,int max_val){
+      if (root==null) return;
+
+      if(root.val>=max_val) goodNodeCounter++;
+        goodNodesFinder(root.left,Math.max(max_val,root.val));
+                goodNodesFinder(root.right,Math.max(max_val,root.val));
+
+    }
 }
 
 public class TreeBasiceCheck {
