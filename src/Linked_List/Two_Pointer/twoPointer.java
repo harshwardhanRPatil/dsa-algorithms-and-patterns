@@ -4,6 +4,13 @@ import Linked_List.ListNode;
 
 import java.util.*;
 
+class Node {
+  public int val;
+  public Node prev;
+  public Node next;
+  public Node child;
+}
+
 public class twoPointer {
 
   public ListNode middleNode(ListNode head) {
@@ -58,7 +65,7 @@ public class twoPointer {
 
   public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
     ListNode head = new ListNode(0);
-    ;
+
     ListNode temp = head;
     while (list1 != null && list2 != null) {
       if (list1.val > list2.val) {
@@ -309,5 +316,91 @@ public class twoPointer {
     if (l2 != null) curr.next = l2;
 
     return dummy.next;
+  }
+
+  public ListNode reverseKGroup(ListNode head, int k) {
+    if (head == null || k == 1) return head;
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode prev = dummy;
+
+    while (true) {
+      ListNode node = prev;
+      for (int i = 0; i < k && node != null; i++) {
+        node = node.next;
+      }
+      if (node == null) break;
+
+      ListNode start = prev.next;
+      ListNode newHead = reverse(start, k);
+
+      prev.next = newHead;
+      // we have store the addres abouve and use it
+      prev = start; // start becomes tail
+    }
+
+    return dummy.next;
+  }
+
+  public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0) return null;
+    return mergeRange(lists, 0, lists.length - 1);
+  }
+
+  private ListNode mergeRange(ListNode[] lists, int left, int right) {
+    if (left == right) return lists[left];
+
+    int mid = left + (right - left) / 2;
+
+    ListNode l1 = mergeRange(lists, left, mid);
+    ListNode l2 = mergeRange(lists, mid + 1, right);
+
+    return mergeTwoLists(l1, l2);
+  }
+
+  public Node flatten(Node head) {
+    if (head == null) return null;
+    dfs(head);
+    return head;
+  }
+
+  public Node dfs(Node curr) {
+    Node node = curr;
+    Node last = null;
+
+    while (node != null) {
+      Node next = node.next;
+
+      if (node.child != null) {
+        Node childTail = dfs(node.child);
+
+        // attach child
+        node.next = node.child;
+        node.child.prev = node;
+        node.child = null;
+
+        // attach next
+        if (next != null) {
+          childTail.next = next;
+          next.prev = childTail;
+        }
+
+        last = childTail;
+        node = childTail;
+      } else {
+        last = node;
+      }
+      node = node.next;
+    }
+    return last;
+  }
+
+  public int findDuplicate(int[] nums) {
+    Set<Integer> ans = new HashSet<>();
+    for (int i = 0; i < nums.length; i++) {
+      if (ans.contains(nums[i])) return nums[i];
+      ans.add(nums[i]);
+    }
+    return 0;
   }
 }
