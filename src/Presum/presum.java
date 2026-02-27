@@ -1,11 +1,13 @@
 package Presum;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class presum {
+
+    private int[] bit;
+    private int[] nums;
+    private int n;
+    private int[] prefixsum;
 
   private int[][] prefix;
 
@@ -181,50 +183,225 @@ public class presum {
   }
 
   public int numSubarraysWithSum(int[] nums, int goal) {
-      Map<Integer, Integer> map = new HashMap<>();
-      map.put(0, 1);
+    Map<Integer, Integer> map = new HashMap<>();
+    map.put(0, 1);
     int count = 0;
     int sum = 0;
     for (int i = 0; i < nums.length; i++) {
       sum += nums[i];
-// this part can be improve is we check the count insted of the loop
-//      if (map.containsKey(sum - goal)) {
-//
-//        for (int startIndex : map.get(sum - goal)) {
-//          count++;
-//        }
-//      }
+      // this part can be improve is we check the count insted of the loop
+      //      if (map.containsKey(sum - goal)) {
+      //
+      //        for (int startIndex : map.get(sum - goal)) {
+      //          count++;
+      //        }
+      //      }
 
-        // code to improve
-        if (map.containsKey(sum - goal)) {
-            count += map.get(sum - goal);
-        }
-        map.put(sum,map.getOrDefault(sum,0)+1);
+      // code to improve
+      if (map.containsKey(sum - goal)) {
+        count += map.get(sum - goal);
+      }
+      map.put(sum, map.getOrDefault(sum, 0) + 1);
     }
     return count;
   }
-    public int subarraySum(int[] arr, int k) {
-        Map<Integer, List<Integer>> map = new HashMap<>();
 
-        // VERY IMPORTANT
-        map.put(0, new ArrayList<>(List.of(-1)));
+  public int subarraySum(int[] arr, int k) {
+    Map<Integer, List<Integer>> map = new HashMap<>();
 
-        int sum = 0;
-        int count=0;
+    // VERY IMPORTANT
+    map.put(0, new ArrayList<>(List.of(-1)));
 
-        for (int i = 0; i < arr.length; i++) {
+    int sum = 0;
+    int count = 0;
 
-            sum += arr[i];
+    for (int i = 0; i < arr.length; i++) {
 
-            if (map.containsKey(sum - k)) {
-                for (int start : map.get(sum - k)) {
-                    count++;
-                }
-            }
+      sum += arr[i];
 
-            map.computeIfAbsent(sum, x -> new ArrayList<>()).add(i);
+      if (map.containsKey(sum - k)) {
+        for (int start : map.get(sum - k)) {
+          count++;
         }
+      }
 
-        return count;
+      map.computeIfAbsent(sum, x -> new ArrayList<>()).add(i);
+    }
+
+    return count;
+  }
+
+  class Fenwick {
+    int[] tree;
+    int size;
+
+    public Fenwick(int size) {
+      this.tree = new int[size + 1];
+      this.size = size + 1;
+    }
+
+    void update(int index, int value) {
+
+      while (index < size) {
+        tree[index] += value;
+        index += index & -index;
+      }
+    }
+
+    public int query(int index) {
+      int sum = 0;
+      while (index > 0) {
+        sum += tree[index];
+        index -= index & -index;
+      }
+      return sum;
+    }
+  }
+
+  public int countRangeSum(int[] nums, int lower, int upper) {
+    long prefix = 0;
+    List<Long> allValues = new ArrayList<>();
+    allValues.add(0L);
+
+    for (int num : nums) {
+      prefix += num;
+      allValues.add(prefix);
+      allValues.add(prefix - lower);
+      allValues.add(prefix - upper);
+    }
+
+    Collections.sort(allValues);
+    Map<Long, Integer> map = new HashMap<>();
+
+    int id = 1;
+    for (Long i : allValues) {
+      if (!map.containsKey(i)) {
+        map.put(i, id++);
+      }
+    }
+    Fenwick fenwick = new Fenwick(map.size());
+    fenwick.update(map.get(0L), 1);
+
+    int count = 0;
+    long prefixSum = 0;
+
+    for (int i : nums) {
+      prefixSum += i;
+
+      long left = prefixSum - upper;
+      long right = prefixSum - lower;
+
+      count += fenwick.query(map.get(right)) - fenwick.query(map.get(left) - 1);
+
+      fenwick.update(map.get(prefixSum), 1);
+    }
+    return count;
+  }
+
+  // nove solution
+  public int maximumWhiteTiles(int[][] tiles, int carpetLen) {
+    Arrays.sort(tiles, (a, b) -> Integer.compare(a[0], b[0]));
+    int n = tiles.length;
+    int max = 0;
+    for (int i = 0; i < n; i++) {
+      int carpetStart = tiles[i][0];
+      int carpetEnd = carpetStart + carpetLen - 1;
+      int covered = 0;
+
+      for (int j = i; j < n; j++) {
+
+        int tileStart = tiles[j][0];
+        int tileEnd = tiles[j][1];
+        if (tileStart > carpetEnd) break;
+        if (tileEnd <= carpetEnd) {
+          covered += tileEnd - tileStart + 1;
+        } else {
+          covered += carpetEnd - tileStart + 1;
+        }
+      }
+      max = Math.max(max, covered);
+    }
+    return max;
+  }
+
+  // prefix sum  take help from chatgpt
+  public int maximumWhiteTilesII(int[][] tiles, int carpetLen) {
+    Arrays.sort(tiles, (a, b) -> Integer.compare(a[0], b[0]));
+    int max_length = 0;
+    int left = 0;
+    int carpet_cover = 0;
+    int n = tiles.length;
+
+    for (int i = 0; i < n; i++) {
+      carpet_cover += tiles[i][1] - tiles[i][0] + 1;
+
+      while (tiles[i][1] - tiles[left][0] + 1 > carpetLen) {
+        int exceed = tiles[i][1] - tiles[left][0] + 1 - carpetLen;
+        int leftTileLength = tiles[left][1] - tiles[left][0] + 1;
+
+        if (exceed >= leftTileLength) {
+          carpet_cover -= leftTileLength;
+          left++;
+        } else {
+          break;
+        }
+      }
+      int totalSpan = tiles[i][1] - tiles[left][0] + 1;
+      int partial = Math.max(0, totalSpan - carpetLen);
+
+      max_length = Math.max(max_length, carpet_cover - partial);
+    }
+    return max_length;
+  }
+
+
+    public void NumArray(int[] nums) {
+        this.n = nums.length;
+        this.nums = new int[n];
+        this.bit = new int[n + 1];  // 1-based indexing
+
+        for (int i = 0; i < n; i++) {
+            update(i, nums[i]);
+        }
+    }
+
+
+    public void update(int index, int val) {
+        // in normal code we do the add so we can do the arr[i]+val but as we are updateing we nned to find the diff first
+        int diff = val - nums[index];
+        nums[index] = val;
+
+        int i = index + 1;
+        while (i <= n) {
+            bit[i] += diff;
+            i += i & -i;
+        }
+    }
+
+    private int query(int index) {
+        int sum = 0;
+        int i = index + 1;
+
+        while (i > 0) {
+            sum += bit[i];
+            i -= i & -i;    // move to parent
+        }
+        return sum;
+    }
+    public int sumRange(int left, int right) {
+        return query(right) - query(left - 1);
+    }
+
+    public void NumArrayII(int[] nums) {
+        int n = nums.length;
+        prefixsum = new int[n + 1];
+
+        for (int i = 0; i < n; i++) {
+            prefixsum[i + 1] = prefixsum[i] + nums[i];
+        }
+    }
+
+    public int sumRangeII(int left, int right) {
+        return prefixsum[right + 1] - prefixsum[left];
     }
 }

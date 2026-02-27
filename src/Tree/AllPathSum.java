@@ -4,7 +4,7 @@ import java.util.*;
 
 class AllPathSumSolution {
   Map<TreeNode, int[]> memo = new HashMap<>();
-
+    int totalSum = 0;
   public boolean hasPathSum(TreeNode root, int targetSum) {
     if (root == null) {
       return false;
@@ -135,6 +135,24 @@ class AllPathSumSolution {
     memo.get(root)[idx] = res;
     return res;
   }
+
+    public int sumRootToLeaf(TreeNode root) {
+        dfs(root, new StringBuilder());
+        return totalSum;
+    }
+    private void dfs(TreeNode node, StringBuilder path) {
+      if(node==null) return;
+
+      path.append(node.val);
+      if(node.left==null && node.right==null){
+          int value=Integer.parseInt(path.toString(),2);
+          totalSum+=value;
+      }else{
+        dfs(node.left,path);
+        dfs(node.right,path);
+      }
+      path.deleteCharAt(path.length()-1);
+    }
 }
 
 public class AllPathSum {}
