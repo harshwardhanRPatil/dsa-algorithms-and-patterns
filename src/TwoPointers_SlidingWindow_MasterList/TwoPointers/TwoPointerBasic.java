@@ -141,4 +141,23 @@ public class TwoPointerBasic {
         }
         return ans;
     }
+
+    public int removeDuplicatesII(int[] nums) {
+
+        int n=nums.length;
+        if (n <= 2) return n;
+
+
+        int index=2;
+        for(int i=2;i<n;i++){
+            // what we do it we check if the value for the index-2 are differ then we just add the value
+            // if ther are same then we don't move the index so next value we find we overtire that it do this in place only
+
+            if(nums[i]!=nums[index-2]){
+                nums[index]=nums[i];
+                index++;
+            }
+        }
+        return index;
+    }
 }
