@@ -1,5 +1,7 @@
 package Binary_Search.Binary_Search;
 
+import java.util.Arrays;
+
 public class Binary_Search_bASIC {
   public static void main(String args[]) {}
 
@@ -117,6 +119,7 @@ public class Binary_Search_bASIC {
         left = mid + 1;
       }
     }
+
     return ans;
   }
 
@@ -359,6 +362,8 @@ public class Binary_Search_bASIC {
         }
         return false;
     }
+
+
   public int guess(int n) {
     return 0;
   }

@@ -2,16 +2,16 @@ Absolutely! Following the style of your Greedy README, here’s a **complete REA
 
 ---
 
-# ⚡ Heap / Priority Queue — Complete Guide
+# ⚡ HeapPriorityQueue / Priority Queue — Complete Guide
 
 ---
 
-## 📌 1. What is a Heap?
+## 📌 1. What is a HeapPriorityQueue?
 
 A **heap** is a specialized tree-based data structure that satisfies the **heap property**:
 
-* **Min-Heap:** Parent ≤ Children → smallest element at root
-* **Max-Heap:** Parent ≥ Children → largest element at root
+* **Min-HeapPriorityQueue:** Parent ≤ Children → smallest element at root
+* **Max-HeapPriorityQueue:** Parent ≥ Children → largest element at root
 
 **In simple terms:**
 👉 “Quick access to the smallest or largest element.”
@@ -47,12 +47,12 @@ Common applications:
 
 | Type     | Property          | Root Element |
 | -------- | ----------------- | ------------ |
-| Min-Heap | Parent ≤ Children | Smallest     |
-| Max-Heap | Parent ≥ Children | Largest      |
+| Min-HeapPriorityQueue | Parent ≤ Children | Smallest     |
+| Max-HeapPriorityQueue | Parent ≥ Children | Largest      |
 
 ---
 
-## 📌 4. Heap Operations
+## 📌 4. HeapPriorityQueue Operations
 
 | Operation        | Description                               | Time Complexity |
 | ---------------- | ----------------------------------------- | --------------- |
@@ -65,7 +65,7 @@ Common applications:
 
 ## 📌 5. Using Heaps in Java
 
-### Min-Heap (default)
+### Min-HeapPriorityQueue (default)
 
 ```java
 PriorityQueue<Integer> minHeap = new PriorityQueue<>();
@@ -76,7 +76,7 @@ minHeap.offer(8);
 System.out.println(minHeap.poll()); // 2
 ```
 
-### Max-Heap
+### Max-HeapPriorityQueue
 
 ```java
 PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
@@ -89,7 +89,7 @@ System.out.println(maxHeap.poll()); // 8
 
 ---
 
-## 📌 6. Custom Object Heap
+## 📌 6. Custom Object HeapPriorityQueue
 
 ```java
 class Node {
@@ -107,9 +107,9 @@ PriorityQueue<Node> heap = new PriorityQueue<>((a, b) -> a.sum_value - b.sum_val
 
 ---
 
-## 📌 7. How to Identify Heap Problems
+## 📌 7. How to Identify HeapPriorityQueue Problems
 
-Heap problems often require:
+HeapPriorityQueue problems often require:
 
 * **Top K smallest/largest elements**
 * **Frequent min/max retrieval**
@@ -125,9 +125,9 @@ Heap problems often require:
 
 ---
 
-## 📌 8. Common Heap Patterns
+## 📌 8. Common HeapPriorityQueue Patterns
 
-✅ **1. Min/Max Heap for Top K**
+✅ **1. Min/Max HeapPriorityQueue for Top K**
 
 * Maintain size K heap
 * Examples: Kth largest element, Top K frequent elements
@@ -141,16 +141,16 @@ Heap problems often require:
 ✅ **3. Sliding Window Min/Max**
 
 * Keep track of min/max in a window
-* Heap allows efficient update when window moves
+* HeapPriorityQueue allows efficient update when window moves
 
-✅ **4. Greedy + Heap**
+✅ **4. Greedy + HeapPriorityQueue**
 
 * When greedy requires picking **min/max repeatedly**
 * Examples: Connect ropes, task scheduling, Dijkstra’s shortest path
 
 ---
 
-## 📌 9. Heap Problem Categories
+## 📌 9. HeapPriorityQueue Problem Categories
 
 | Category              | Examples                               |
 | --------------------- | -------------------------------------- |
@@ -161,7 +161,7 @@ Heap problems often require:
 
 ---
 
-## 📌 10. Universal Heap Approach
+## 📌 10. Universal HeapPriorityQueue Approach
 
 1. **Identify the key:** Min or Max element to optimize
 2. **Decide heap type:** Min-heap for smallest, Max-heap for largest
@@ -171,7 +171,7 @@ Heap problems often require:
 
 ---
 
-## 📌 11. Heap Time & Space Complexity
+## 📌 11. HeapPriorityQueue Time & Space Complexity
 
 | Operation / Pattern | Time Complexity | Space Complexity |
 | ------------------- | --------------- | ---------------- |
@@ -213,14 +213,14 @@ This README is **pattern-based**, just like your Greedy one, so it’s **intervi
 
 If you want, I can also create a **visual version** with:
 
-* Min-Heap / Max-Heap tree diagrams
+* Min-HeapPriorityQueue / Max-HeapPriorityQueue tree diagrams
 * Step-by-step heap expansion for `K smallest pairs`
 
 This makes it very **attractive for GitHub**.
 
 References
 
-* Heap on GeeksforGeeks
+* HeapPriorityQueue on GeeksforGeeks
 * Java PriorityQueue Documentation
 * LeetCode Problems: 215, 373, 703
 
