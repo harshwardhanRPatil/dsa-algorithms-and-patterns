@@ -407,6 +407,59 @@ class SlidingWindowBasicSolution {
     }
     return count;
   }
+
+  public int longestOnes(int[] nums, int k) {
+    int i = 0;
+    int j = 0;
+    int n = nums.length;
+    int ans = Integer.MIN_VALUE;
+    int flip = 0;
+    while (j < n) {
+      if (nums[j] == 0) {
+        flip++;
+      }
+// not user while (flip >k  && i < j) because if i==j ==0 then it willl fail
+      while (flip >k) {
+        if (nums[i] == 0) flip--;
+        i++;
+      }
+
+      ans = Math.max(ans, j - i + 1);
+      j++;
+    }
+    return ans;
+  }
+
+    public long maximumSubarraySum(int[] nums, int k) {
+        Map<Integer, Integer> map= new HashMap<>();
+
+        int i=0;
+        int j=0;
+        int n=nums.length;
+        long ans=0;
+        long presum=0;
+        while(j<n){
+            presum+=nums[j];
+            map.put(nums[j], map.getOrDefault(nums[j], 0) + 1);
+
+
+            if((j-i+1)>k){
+                // remove here also becaise if i have 1 2 3 1 then i will consider ass the  1 repeat and not consider so i remove it
+                map.put(nums[i],map.get(nums[i])-1);
+                if (map.get(nums[i]) == 0) {
+                    map.remove(nums[i]);
+                }
+                presum-=nums[i];
+                i++;
+            }
+            // map size make sure that the k diffrent elemet
+            if (j - i + 1 == k  && map.size() == k) {
+                ans = Math.max(ans, presum);
+            }
+            j++;
+        }
+        return ans;
+    }
 }
 
 public class SlidingWindowBasic {

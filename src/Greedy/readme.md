@@ -84,7 +84,7 @@ Most greedy problems start by sorting:
 
 ---
 
-### ✅ **2. Use a Min-Heap / Max-Heap**
+### ✅ **2. Use a Min-HeapPriorityQueue / Max-HeapPriorityQueue**
 
 Useful when always picking:
 
@@ -160,7 +160,7 @@ Examples:
 Techniques:
 
 * Sort
-* Heap
+* HeapPriorityQueue
 
 ---
 
@@ -319,7 +319,7 @@ end =iv[1];
 
 ---
 
-## ✔ Heap-based greedy
+## ✔ HeapPriorityQueue-based greedy
 
 ```java
 PriorityQueue<Integer> pq = new PriorityQueue<>();

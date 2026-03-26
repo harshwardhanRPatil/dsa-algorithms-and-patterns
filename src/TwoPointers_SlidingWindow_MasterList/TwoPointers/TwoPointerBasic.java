@@ -76,4 +76,88 @@ public class TwoPointerBasic {
 
         return result ;
     }
+
+    public int removeDuplicates(int[] nums) {
+
+        int n = nums.length;
+        if (n <= 2) return n;
+
+        int marker = Integer.MIN_VALUE;
+        int i = 0;
+        while (i < n) {
+            int j = i;
+            while (j < n && nums[j] == nums[i]) {
+                j++;
+            }
+
+            int count = j - i;
+            if (count > 2) {
+                for (int k = i + 2; k < j; k++) {
+                    nums[k] = marker;
+                }
+            }
+
+            i = j;
+        }
+
+        int write = 0;
+        for (int read = 0; read < n; read++) {
+            if (nums[read] != marker) {
+                nums[write++] = nums[read];
+            }
+        }
+
+        return write;
+    }
+
+    /*
+    We don’t compute min(leftMax, rightMax) explicitly because we always move the pointer
+    at the smaller height, which guarantees that side is the limiting boundary —
+     so the minimum is already determined implicitly.
+     */
+    public int trap(int[] height) {
+        int ans=0;
+        int left=0;
+        int right=height.length-1;
+        int leftMax=0;
+        int rightMax=0;
+
+        while (left<right){
+            if(height[left]<height[right]){
+                if(height[left]>leftMax){
+                    leftMax=height[left];
+                }else{
+                    ans+=leftMax-height[left];
+                }
+                left++;
+            }else{
+                if(height[right]>rightMax){
+                    rightMax=height[right];
+                }else{
+                    ans+=rightMax-height[right];
+                }
+                right--;
+            }
+        }
+        return ans;
+    }
+
+    public int removeDuplicatesII(int[] nums) {
+
+        int n=nums.length;
+        if (n <= 2) return n;
+
+
+        int index=2;
+        for(int i=2;i<n;i++){
+            // what we do it we check if the value for the index-2 are differ then we just add the value
+            // if ther are same then we don't move the index so next value we find we overtire that it do this in place only
+
+            if(nums[i]!=nums[index-2]){
+                nums[index]=nums[i];
+                index++;
+            }
+        }
+        return index;
+    }
 }
