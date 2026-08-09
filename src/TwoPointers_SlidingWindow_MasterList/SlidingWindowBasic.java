@@ -289,36 +289,29 @@ class SlidingWindowBasicSolution {
   }
 
   public int[] maxSlidingWindow(int[] arr, int k) {
-    int size = arr.length;
+          int size = arr.length;
 
-    Deque<Integer> queue = new ArrayDeque<>();
+          Deque<Integer> queue = new ArrayDeque<>();
 
-    int[] ans = new int[size - k + 1];
-    int i = 0;
+          int[] ans = new int[size - k + 1];
+          int i = 0;
 
-    for (int j = 0; j < size; j++) {
-      if (!queue.isEmpty() && arr[queue.peekLast()] > arr[j]) {
-        queue.add(j);
-      } else {
-        while (!queue.isEmpty() && arr[queue.peekLast()] < arr[j]) {
-          queue.pollLast();
-        }
-        queue.add(j);
-      }
-      while (j - i + 1 > k) {
-        if (queue.size() > 0 && i == queue.peekFirst()) {
-          queue.pollFirst();
-        }
-        i++;
-      }
+          for (int j = 0; j < size; j++) {
 
-      if (j - i + 1 == k) {
-        int temp = queue.peekFirst();
-        ans[i] = (arr[temp]);
-      }
-      // System.out.println(queue);
-    }
-    return ans;
+              if (!queue.isEmpty() && j - queue.peekFirst() >= k) {
+                  queue.removeFirst();
+              }
+              while (!queue.isEmpty() && arr[queue.peekLast()] < arr[j]) {
+                  queue.removeLast();
+              }
+              queue.offerLast(j);
+
+              if (j >= k - 1) {
+                  ans[i] = arr[queue.peekFirst()];
+                  i++;
+              }
+          }
+          return ans;
   }
 
   public int numSubarrayProductLessThanK(int[] nums, int k) {

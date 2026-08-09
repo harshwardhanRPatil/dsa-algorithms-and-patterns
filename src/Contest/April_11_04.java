@@ -1,4 +1,4 @@
-package Contest.Feb_28_02;
+package Contest;
 
 import kotlin.time.TimeMark;
 

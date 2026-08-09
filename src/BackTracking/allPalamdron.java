@@ -24,7 +24,8 @@ class TreeNode {
 class SolutionPalmdron {
 
   int[] dp;
-    int count=0;
+  int count = 0;
+
   public ArrayList<String> solve(String s) {
     ArrayList<String> ans = new ArrayList<>();
     ArrayList<String> temp = new ArrayList<>();
@@ -499,34 +500,50 @@ class SolutionPalmdron {
     return false;
   }
 
-  public boolean existPath(
-      char[][] board,
-      String word,
-      int index,
-      boolean[][] visited,
-      int x,
-      int y,
-      int boardLength,
-      int boardWeidth) {
+  // https://leetcode.com/problems/word-search-ii/description/?envType=problem-list-v2&envId=backtracking
+    public List<String> findWords(char[][] board, String[] words) {
+        List<String> result = new ArrayList<>();
+        for (int k = 0; k < words.length; k++) {
+            String word = words[k];
+            if(exist(board,word)){
+                result.add(word);
+            }
 
-    if (word.length() == index) return true;
-
-    if (x < 0 || x >= boardLength || y < 0 || y >= boardWeidth) {
-      return false;
+        }
+        return result;
     }
-    if (visited[x][y]) return false;
 
-    if (board[x][y] == word.charAt(index)) {
-      visited[x][y] = true;
-      if (existPath(board, word, index + 1, visited, x + 1, y, boardLength, boardWeidth)
-          || existPath(board, word, index + 1, visited, x - 1, y, boardLength, boardWeidth)
-          || existPath(board, word, index + 1, visited, x, y + 1, boardLength, boardWeidth)
-          || existPath(board, word, index + 1, visited, x, y - 1, boardLength, boardWeidth))
-        return true;
-      visited[x][y] = false;
+    public boolean existPath(
+            char[][] board,
+            String word,
+            int index,
+            boolean[][] visited,
+            int x,
+            int y,
+            int boardLength,
+            int boardWeidth) {
+
+        if (word.length() == index) {
+            return true;
+        }
+
+        if (x < 0 || x >= boardLength || y < 0 || y >= boardWeidth) {
+            return false;
+        }
+        if (visited[x][y])
+            return false;
+
+        if (board[x][y] == word.charAt(index)) {
+            visited[x][y] = true;
+            if (existPath(board, word, index + 1, visited, x + 1, y, boardLength, boardWeidth)
+                    || existPath(board, word, index + 1, visited, x - 1, y, boardLength, boardWeidth)
+                    || existPath(board, word, index + 1, visited, x, y + 1, boardLength, boardWeidth)
+                    || existPath(board, word, index + 1, visited, x, y - 1, boardLength, boardWeidth))
+                return true;
+            visited[x][y] = false;
+        }
+        return false;
     }
-    return false;
-  }
 
   // https://leetcode.com/problems/letter-combinations-of-a-phone-number/
   public List<String> letterCombinations(String digits) {
@@ -558,7 +575,7 @@ class SolutionPalmdron {
 
     if (digits.length() == index) {
       result.add(stringBuilder.toString());
-        return;
+      return;
     }
 
     char ch = digits.charAt(index);
@@ -576,47 +593,144 @@ class SolutionPalmdron {
   // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
   public boolean canPartitionKSubsets(int[] nums, int k) {
 
-      int n = nums.length;
-      int sum = Arrays.stream(nums).sum();
-      if (sum % k != 0)
-          return false;
-      Arrays.sort(nums); // ascending
+    int n = nums.length;
+    int sum = Arrays.stream(nums).sum();
+    if (sum % k != 0) return false;
+    Arrays.sort(nums); // ascending
 
-      // reverse
-      for (int i = 0, j = nums.length - 1; i < j; i++, j--) {
-          int temp = nums[i];
-          nums[i] = nums[j];
-          nums[j] = temp;
-      }
-      boolean[] visted = new boolean[n];
-      Arrays.fill(visted, false);
+    // reverse
+    for (int i = 0, j = nums.length - 1; i < j; i++, j--) {
+      int temp = nums[i];
+      nums[i] = nums[j];
+      nums[j] = temp;
+    }
+    boolean[] visted = new boolean[n];
+    Arrays.fill(visted, false);
 
-      return  canPartitionKSubsetsList(nums, k, sum / k, visted, 0,sum / k);
+    return canPartitionKSubsetsList(nums, k, sum / k, visted, 0, sum / k);
   }
 
-    public boolean canPartitionKSubsetsList(int[] nums, int k, int target, boolean[] visited, int index,int bucket) {
+  public boolean canPartitionKSubsetsList(
+      int[] nums, int k, int target, boolean[] visited, int index, int bucket) {
 
-        if(k==1) return true;
+    if (k == 1) return true;
 
-        if (target == 0) {
-            return canPartitionKSubsetsList(nums, k-1, bucket, visited, 0,bucket);
+    if (target == 0) {
+      return canPartitionKSubsetsList(nums, k - 1, bucket, visited, 0, bucket);
+    }
+    if (index == nums.length) return false;
+
+    for (int i = index; i < nums.length; i++) {
+      if (nums[i] <= target && !visited[i]) {
+        // avoid duplicates
+        // if we can't use the last we can't use this one also as it a duplicates CALL  all
+        // again and it imprve the performance
+        if (i > index && nums[i] == nums[i - 1] && !visited[i - 1]) continue;
+
+        visited[i] = true;
+        if (canPartitionKSubsetsList(nums, k, target - nums[i], visited, i + 1, bucket))
+          return true;
+        visited[i] = false;
+      }
+    }
+    return false;
+  }
+
+  public List<List<Integer>> combine(int n, int k) {
+    List<List<Integer>> result = new ArrayList<>();
+    combineList(n, k, result, new ArrayList<>(), 1);
+    return result;
+  }
+
+  public void combineList(int n, int k, List<List<Integer>> result, List<Integer> temp, int index) {
+
+    if (temp.size() == k) {
+      result.add(new ArrayList<>(temp));
+      return;
+    }
+
+    for (int i = index; i < n; i++) {
+      temp.add(i);
+      combineList(n, k, result, temp, i + 1);
+      temp.remove(temp.size() - 1);
+    }
+  }
+
+    public List<String> wordBreak(String s, List<String> wordDict) {
+
+        List<String> result = new ArrayList<>();
+        workBreakConbination(s, wordDict, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    public void workBreakConbination(
+            String s, List<String> wordDict, int index, List<String> temp, List<String> ans) {
+
+        if (index == s.length()) {
+            ans.add(String.join(" ", temp));
         }
-        if (index == nums.length)
-            return false;
-
-        for (int i = index; i < nums.length; i++) {
-            if (nums[i] <= target && !visited[i]) {
-                // avoid duplicates
-                // if we can't use the last we can't use this one also as it a duplicates CALL  all
-                // again and it imprve the performance
-                if (i > index && nums[i] == nums[i - 1] && !visited[i - 1]) continue;
-
-                visited[i] = true;
-                if (canPartitionKSubsetsList(nums, k, target - nums[i], visited, i + 1,bucket)) return true;
-                visited[i] = false;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = index; i < s.length(); i++) {
+            stringBuilder.append(s.charAt(i));
+            if (wordDict.contains(stringBuilder.toString())) {
+                temp.add(stringBuilder.toString());
+                workBreakConbination(s, wordDict, i + 1, temp, ans);
+                temp.remove(temp.size() - 1);
             }
         }
-        return false;
+    }
+
+
+    public List<String> removeInvalidParentheses(String s) {
+        Set<String> mapper = new HashSet<>();
+        // use array as we nee this va;u for other and we passs obkject else we need globae varable
+        int[] minRemoval = new int[] { Integer.MAX_VALUE };
+
+        combinationremoveInvalidParentheses(s, 0, new StringBuilder(), mapper, 0, minRemoval);
+        return new ArrayList<>(mapper);
+    }
+
+    public void combinationremoveInvalidParentheses(String s, int index, StringBuilder temp, Set<String> mapper,
+                                                    int removal, int[] minRemoval) {
+
+        if (index == s.length()) {
+            if (isValidParentheses(temp.toString())) {
+                if (removal < minRemoval[0]) {
+                    mapper.clear();
+                    minRemoval[0] = removal;
+                }
+                if (removal == minRemoval[0]) {
+                    mapper.add(temp.toString());
+                }
+            }
+            return;
+
+        }
+
+        if (s.charAt(index) == '(' || s.charAt(index) == ')') {
+            combinationremoveInvalidParentheses(s, index + 1, temp, mapper, removal + 1, minRemoval);
+        }
+        temp.append(s.charAt(index));
+        combinationremoveInvalidParentheses(s, index + 1, temp, mapper, removal, minRemoval);
+        temp.deleteCharAt(temp.length() - 1);
+
+    }
+
+    public boolean isValidParentheses(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char ch : s.toCharArray()) {
+
+            if (ch == '(') {
+                stack.push(ch);
+            } else if (ch == ')') {
+                if (stack.isEmpty())
+                    return false;
+                stack.pop();
+            }
+        }
+
+        return stack.isEmpty();
     }
 }
 

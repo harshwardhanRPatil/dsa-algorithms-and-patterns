@@ -1,4 +1,4 @@
-package Contest.Feb_28_02;
+package Contest;
 
 public class Mar_22_03 {
     static void main(){
